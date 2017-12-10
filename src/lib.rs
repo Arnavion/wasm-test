@@ -5,7 +5,7 @@
 extern crate browser;
 
 #[no_mangle]
-pub unsafe extern fn run() {
+pub extern fn run() {
 	let result = do catch {
 		let document = browser::dom::document().map_err(|()| "couldn't get document")?;
 		let div = document.query_selector("#output1").map_err(|()| "couldn't query #output1")?;
