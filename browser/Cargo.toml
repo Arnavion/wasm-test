@@ -1,0 +1,4 @@
+[package]
+name = "browser"
+version = "0.1.0"
+authors = ["Arnavion <arnavion@gmail.com>"]

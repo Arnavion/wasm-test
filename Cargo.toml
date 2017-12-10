@@ -1,0 +1,10 @@
+[package]
+name = "wasm-test"
+version = "0.1.0"
+authors = ["Arnavion <arnavion@gmail.com>"]
+
+[dependencies]
+browser = { path = "./browser" }
+
+[lib]
+crate-type = ["cdylib"]

@@ -1,0 +1,13 @@
+{
+	"compilerOptions": {
+		"checkJs": true,
+		"strict": true,
+		"target": "es2015"
+	},
+	"typeAcquisition": {
+		"include": [
+			"text-encoding",
+			"webassembly-js-api"
+		]
+	}
+}
