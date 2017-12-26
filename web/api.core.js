@@ -28,11 +28,16 @@ export function release(handle) {
  * @param {number} ptr
  * @param {number} len
  */
-export function getString(memory, ptr, len) {
+export function readStringFromModule(memory, ptr, len) {
 	const decoder = new TextDecoder("utf-8");
 	return decoder.decode(new Uint8Array(memory.buffer, ptr, len));
 }
 
-export const imports = {
-	release,
-};
+/**
+ * @param {WebAssembly.Memory} memory
+ */
+export function imports(memory) {
+	return {
+		core_release: release,
+	};
+}

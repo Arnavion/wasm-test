@@ -1,5 +1,5 @@
 extern {
-	#[link_name = "release"]
+	#[link_name = "core_release"]
 	fn extern_release(handle: i32);
 }
 

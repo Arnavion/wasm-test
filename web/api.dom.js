@@ -1,4 +1,4 @@
-import { allocate, get, getString } from "./api.core.js";
+import { allocate, get, readStringFromModule } from "./api.core.js";
 
 /**
  * @param {WebAssembly.Memory} memory
@@ -10,7 +10,7 @@ export function imports(memory) {
 		 * @param {number} tagNameLen
 		 */
 		dom_createElement(tagNamePtr, tagNameLen) {
-			const tagName = getString(memory, tagNamePtr, tagNameLen);
+			const tagName = readStringFromModule(memory, tagNamePtr, tagNameLen);
 
 			return allocate(document.createElement(tagName));
 		},
@@ -39,7 +39,7 @@ export function imports(memory) {
 		 */
 		dom_element_querySelector(nodeHandle, selectorPtr, selectorLen) {
 			/** @type {HTMLElement} */ const node = get(nodeHandle);
-			const selector = getString(memory, selectorPtr, selectorLen);
+			const selector = readStringFromModule(memory, selectorPtr, selectorLen);
 
 			const result = node.querySelector(selector);
 			if (result === null) {
@@ -57,7 +57,7 @@ export function imports(memory) {
 		 */
 		dom_element_setInnerHTML(nodeHandle, innerTextPtr, innerTextLen) {
 			/** @type {HTMLElement} */ const node = get(nodeHandle);
-			const innerHTML = getString(memory, innerTextPtr, innerTextLen);
+			const innerHTML = readStringFromModule(memory, innerTextPtr, innerTextLen);
 
 			node.innerHTML = innerHTML;
 		},
@@ -69,7 +69,7 @@ export function imports(memory) {
 		 */
 		dom_element_setInnerText(nodeHandle, innerTextPtr, innerTextLen) {
 			/** @type {HTMLElement} */ const node = get(nodeHandle);
-			const innerText = getString(memory, innerTextPtr, innerTextLen);
+			const innerText = readStringFromModule(memory, innerTextPtr, innerTextLen);
 
 			node.innerText = innerText;
 		},

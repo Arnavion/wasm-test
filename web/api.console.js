@@ -1,4 +1,4 @@
-import { getString } from "./api.core.js";
+import { readStringFromModule } from "./api.core.js";
 
 /**
  * @param {WebAssembly.Memory} memory
@@ -6,11 +6,11 @@ import { getString } from "./api.core.js";
 export function imports(memory) {
 	return {
 		/**
-		 *  @param {number} messagePtr
-		 *  @param {number} messageLen
+		 * @param {number} messagePtr
+		 * @param {number} messageLen
 		 */
 		console_log(messagePtr, messageLen) {
-			const message = getString(memory, messagePtr, messageLen);
+			const message = readStringFromModule(memory, messagePtr, messageLen);
 
 			console.log(message);
 		},

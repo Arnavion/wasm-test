@@ -1,42 +1,32 @@
 import { imports as consoleImports } from "./api.console.js";
 import { imports as coreImports } from "./api.core.js";
 import { imports as domImports } from "./api.dom.js";
+import { getImportedMemoryDescriptor } from "./wasm.js";
 
 async function run() {
 	const response = await fetch("wasm_test.wasm");
-	const module = await WebAssembly.compileStreaming(response);
-	const memory = new WebAssembly.Memory({
-		initial: 0, // No JS API to get the initial size of an imported memory. Let it fail and parse it from the error message.
-	});
+	const buffer = await response.arrayBuffer();
+
+	const module = await WebAssembly.compile(buffer);
+
+	let importedMemoryDescriptor = getImportedMemoryDescriptor(new DataView(buffer));
+	if (importedMemoryDescriptor === null) {
+		throw new Error("did not find imported memory limits");
+	}
+
+	const memory = new WebAssembly.Memory(importedMemoryDescriptor);
 	const imports = {
 		env: {
 			...consoleImports(memory),
-			...coreImports,
+			...coreImports(memory),
 			...domImports(memory),
 			memory,
 		},
 	};
-	for (let i = 0; i < 2; i++) {
-		try {
-			const { exports: { run } } = await WebAssembly.instantiate(module, imports);
-			run();
-			break;
-		}
-		catch (ex) {
-			if (i !== 0) {
-				throw ex;
-			}
 
-			if (!(ex instanceof WebAssembly.LinkError)) {
-				throw ex;
-			}
+	const { exports: { render } } = await WebAssembly.instantiate(module, imports);
 
-			const matches = ex.message.match(/is smaller than initial (\d+), got 0/);
-			if (matches !== null) {
-				memory.grow(parseInt(matches[1]));
-			}
-		}
-	}
+	render();
 }
 
 if (document.readyState === "interactive" || document.readyState === "loaded") {
